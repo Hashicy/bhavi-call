@@ -1,0 +1,22 @@
+body {
+  margin: 0;
+  background-color: #fff0f5;
+  transition: background-color 0.5s ease;
+}
+
+.App.emo {
+  background-color: #111;
+}
+
+.theme-toggle {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  padding: 10px 15px;
+  background-color: #888;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+}

@@ -1,0 +1,68 @@
+.pomodoro-container {
+  position: absolute;
+  top: 100px;
+  left: 100px;
+  width: 300px;
+  text-align: center;
+  padding: 2rem;
+  border-radius: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  font-family: "Poppins", sans-serif;
+  cursor: grab;
+  user-select: none;
+  transition: background-color 0.4s ease, color 0.4s ease;
+  z-index: 999;
+}
+
+/* Cute Theme */
+.pomodoro-container.cute.focus {
+  background-color: #ffebf0;
+  color: #333;
+}
+
+.pomodoro-container.cute.break {
+  background-color: #e0f7ff;
+  color: #333;
+}
+
+/* Emo Theme */
+.pomodoro-container.emo.focus {
+  background-color: #1e1e1e;
+  color: #f0f0f0;
+}
+
+.pomodoro-container.emo.break {
+  background-color: #2a2a2a;
+  color: #f0f0f0;
+}
+
+.timer {
+  font-size: 3rem;
+  margin: 1rem 0;
+}
+
+.buttons button {
+  margin: 0 10px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.cute .buttons button {
+  background-color: #fca3cc;
+  color: white;
+}
+.cute .buttons button:hover {
+  background-color: #f57cb2;
+}
+
+.emo .buttons button {
+  background-color: #444;
+  color: #eee;
+}
+.emo .buttons button:hover {
+  background-color: #666;
+}
