@@ -118,3 +118,60 @@
   cursor: pointer;
   box-shadow: 0 5px 15px rgba(0,0,0,0.2);
 }
+.call-popup {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 2rem;
+  gap: 1rem;
+}
+
+.call-popup input[type="text"] {
+  padding: 10px 16px;
+  border: 2px solid #e0c3fc;
+  border-radius: 12px;
+  font-size: 16px;
+  background-color: #f9f6ff;
+  color: #4a4a4a;
+  width: 250px;
+  transition: border 0.3s, box-shadow 0.3s;
+}
+
+.call-popup input[type="text"]:focus {
+  outline: none;
+  border-color: #c084fc;
+  box-shadow: 0 0 0 4px rgba(192, 132, 252, 0.2);
+}
+
+.call-popup button.accept {
+  background: linear-gradient(135deg, #c084fc, #a855f7);
+  color: white;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+  box-shadow: 0 4px 8px rgba(168, 85, 247, 0.2);
+}
+
+.call-popup button.accept:hover {
+  background: linear-gradient(135deg, #a855f7, #9333ea);
+  transform: translateY(-2px);
+}
+.floating-stickers {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none; /* So clicks pass through */
+  overflow: visible;
+  z-index: 10;
+}
+.sticker {
+  user-select: none;
+  pointer-events: none;
+  filter: drop-shadow(0 2px 3px rgba(0,0,0,0.15));
+  will-change: transform, left, top;
+}
