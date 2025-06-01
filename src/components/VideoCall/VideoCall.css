@@ -175,3 +175,20 @@
   filter: drop-shadow(0 2px 3px rgba(0,0,0,0.15));
   will-change: transform, left, top;
 }
+.mute-toggle {
+  position: absolute;
+  bottom: 80px;
+  left: 1rem;
+  background-color: #ffebf1;
+  border: none;
+  padding: 0.6rem 1rem;
+  border-radius: 100px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  z-index: 100;
+}
+
+.video-call-wrapper.emo .mute-toggle {
+  background-color: #333;
+  color: white;
+}

@@ -8,6 +8,7 @@ function VideoCall({ theme }) {
   const [callAccepted, setCallAccepted] = useState(false);
   const [incomingCall, setIncomingCall] = useState(null);
   const [remoteStream, setRemoteStream] = useState(null);
+  const [isMuted, setIsMuted] = useState(false);
   const [localStream, setLocalStream] = useState(null);
   const [stickers, setStickers] = useState([]);
 
@@ -37,6 +38,14 @@ function VideoCall({ theme }) {
       }))
     );
   }, [theme]);
+const toggleMute = () => {
+  if (localStream) {
+    localStream.getAudioTracks().forEach((track) => {
+      track.enabled = !track.enabled;
+    });
+    setIsMuted(!isMuted);
+  }
+};
 
   // Animate stickers bouncing inside viewport
   useEffect(() => {
@@ -172,6 +181,10 @@ function VideoCall({ theme }) {
 
       {(callAccepted || localStream) && (
         <div className="call-screen">
+          <button className="mute-toggle" onClick={toggleMute}>
+  {isMuted ? "🎙️ Unmute" : "🔇 Mute"}
+</button>
+
           {callAccepted && (
             <video
               ref={remoteVideoRef}
@@ -212,7 +225,7 @@ function VideoCall({ theme }) {
       top: y,
       userSelect: "none",
       pointerEvents: "none",
-      transform: "scale(0.4)", // scales down to 70%
+      transform: "scale(0.3)", 
       transformOrigin: "top left",
     }}
     draggable={false}
