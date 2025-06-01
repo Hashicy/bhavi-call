@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import Peer from "peerjs";
+import YouTube from "react-youtube";
 import "./VideoCall.css";
 
 function VideoCall({ theme }) {
@@ -12,13 +13,17 @@ function VideoCall({ theme }) {
   const [localStream, setLocalStream] = useState(null);
   const [stickers, setStickers] = useState([]);
 
+  const [ytVideoId, setYtVideoId] = useState("");
+  const [isWatching, setIsWatching] = useState(false);
+
   const localVideoRef = useRef();
   const remoteVideoRef = useRef();
   const peerRef = useRef(null);
   const currentCall = useRef(null);
-  const stickersRef = useRef([]);
+  const ytPlayerRef = useRef(null);
+  const dataConnection = useRef(null);
 
-  // Set stickers based on theme
+  // Theme-based stickers animation - unchanged
   useEffect(() => {
     let newStickers = [];
     if (theme === "cute") {
@@ -26,61 +31,40 @@ function VideoCall({ theme }) {
     } else if (theme === "emo") {
       newStickers = ["moon", "nita", "skull", "yellow"];
     }
-    // Create objects for each sticker with position & velocity
     setStickers(
       newStickers.map((name) => ({
         name,
         x: Math.random() * (window.innerWidth - 100),
         y: Math.random() * (window.innerHeight - 100),
-        vx: (Math.random() - 0.5) * 2, // velocity x
-        vy: (Math.random() - 0.5) * 2, // velocity y
-        size: 80 + Math.random() * 50, // size between 80 and 130 px
+        vx: (Math.random() - 0.5) * 2,
+        vy: (Math.random() - 0.5) * 2,
+        size: 80 + Math.random() * 50,
       }))
     );
   }, [theme]);
-const toggleMute = () => {
-  if (localStream) {
-    localStream.getAudioTracks().forEach((track) => {
-      track.enabled = !track.enabled;
-    });
-    setIsMuted(!isMuted);
-  }
-};
 
-  // Animate stickers bouncing inside viewport
+  // Stickers animation - unchanged
   useEffect(() => {
     let animationFrameId;
 
     function animate() {
-      setStickers((oldStickers) => {
-        return oldStickers.map((sticker) => {
+      setStickers((oldStickers) =>
+        oldStickers.map((sticker) => {
           let { x, y, vx, vy, size } = sticker;
-
           x += vx;
           y += vy;
 
-          // Bounce on left/right edges
-          if (x < 0) {
-            x = 0;
-            vx = -vx;
-          } else if (x + size > window.innerWidth) {
-            x = window.innerWidth - size;
-            vx = -vx;
-          }
+          if (x < 0 || x + size > window.innerWidth) vx = -vx;
+          if (x < 0) x = 0;
+          if (x + size > window.innerWidth) x = window.innerWidth - size;
 
-          // Bounce on top/bottom edges
-          if (y < 0) {
-            y = 0;
-            vy = -vy;
-          } else if (y + size > window.innerHeight) {
-            y = window.innerHeight - size;
-            vy = -vy;
-          }
+          if (y < 0 || y + size > window.innerHeight) vy = -vy;
+          if (y < 0) y = 0;
+          if (y + size > window.innerHeight) y = window.innerHeight - size;
 
           return { ...sticker, x, y, vx, vy };
-        });
-      });
-
+        })
+      );
       animationFrameId = requestAnimationFrame(animate);
     }
 
@@ -88,61 +72,141 @@ const toggleMute = () => {
     return () => cancelAnimationFrame(animationFrameId);
   }, []);
 
+  // Toggle mute local audio
+  const toggleMute = () => {
+    if (localStream) {
+      localStream.getAudioTracks().forEach((track) => {
+        track.enabled = !track.enabled;
+      });
+      setIsMuted(!isMuted);
+    }
+  };
+
+  // Send data only if connection is open
+  const sendToPeer = (data) => {
+    if (dataConnection.current?.open) {
+      dataConnection.current.send(data);
+    }
+  };
+
+  // Initialize Peer, setup handlers
   useEffect(() => {
     const peer = new Peer();
-    peer.on("open", (id) => setMyPeerId(id));
-    peer.on("call", (call) => setIncomingCall(call));
     peerRef.current = peer;
 
-    return () => peer.destroy();
+    peer.on("open", (id) => setMyPeerId(id));
+
+    peer.on("call", (call) => {
+      setIncomingCall(call);
+    });
+
+    peer.on("connection", (conn) => {
+      dataConnection.current = conn;
+      conn.on("data", (data) => {
+        if (data.type === "video") {
+          // Defensive check for valid video ID format
+          if (typeof data.videoId === "string" && data.videoId.length === 11) {
+            setYtVideoId(data.videoId);
+            setIsWatching(true);
+          }
+        } else if (data.type === "yt-state" && ytPlayerRef.current) {
+          const player = ytPlayerRef.current;
+          if (data.state === 1) player.playVideo();
+          else if (data.state === 2) player.pauseVideo();
+        }
+      });
+    });
+
+    return () => {
+      peer.destroy();
+      setCallAccepted(false);
+      setIncomingCall(null);
+      dataConnection.current = null;
+    };
   }, []);
 
+  // Update remote video element's stream
   useEffect(() => {
     if (remoteVideoRef.current && remoteStream) {
       remoteVideoRef.current.srcObject = remoteStream;
     }
   }, [remoteStream]);
 
+  // Update local video element's stream
   useEffect(() => {
     if (localVideoRef.current && localStream) {
       localVideoRef.current.srcObject = localStream;
     }
   }, [localStream]);
 
+  // Get user media stream
   const startStream = async () => {
-    const stream = await navigator.mediaDevices.getUserMedia({
-      video: true,
-      audio: true,
-    });
-    setLocalStream(stream);
-    return stream;
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: true,
+        audio: true,
+      });
+      setLocalStream(stream);
+      return stream;
+    } catch (err) {
+      alert("Error accessing media devices.");
+      throw err;
+    }
   };
 
+  // Accept incoming call
   const acceptCall = async () => {
-    const stream = await startStream();
-    incomingCall.answer(stream);
-    incomingCall.on("stream", (remoteStream) => {
-      setRemoteStream(remoteStream);
-      setCallAccepted(true);
-    });
-    currentCall.current = incomingCall;
-    setIncomingCall(null);
+    if (!incomingCall) return;
+    try {
+      const stream = await startStream();
+      incomingCall.answer(stream);
+      incomingCall.on("stream", (remoteStream) => {
+        setRemoteStream(remoteStream);
+        setCallAccepted(true);
+      });
+      currentCall.current = incomingCall;
+      setIncomingCall(null);
+    } catch (e) {
+      console.error(e);
+    }
   };
 
+  // Make outgoing call
   const makeCall = async () => {
     if (!remoteId.trim()) return alert("Please enter remote peer ID");
-    const stream = await startStream();
-    const call = peerRef.current.call(remoteId, stream);
-    call.on("stream", (remoteStream) => {
-      setRemoteStream(remoteStream);
-      setCallAccepted(true);
-    });
-    currentCall.current = call;
+    try {
+      const stream = await startStream();
+      const call = peerRef.current.call(remoteId, stream);
+      call.on("stream", (remoteStream) => {
+        setRemoteStream(remoteStream);
+        setCallAccepted(true);
+      });
+      const conn = peerRef.current.connect(remoteId);
+      dataConnection.current = conn;
+      currentCall.current = call;
+    } catch (e) {
+      alert("Failed to make a call.");
+      console.error(e);
+    }
   };
 
+  // End current call
   const endCall = () => {
     currentCall.current?.close();
     window.location.reload();
+  };
+
+  // Validate YouTube video ID (simple regex)
+  const isValidYouTubeId = (id) => /^[a-zA-Z0-9_-]{11}$/.test(id);
+
+  // Handle watch together button click
+  const handleWatchTogether = () => {
+    if (!isValidYouTubeId(ytVideoId)) {
+      alert("Please enter a valid 11-character YouTube video ID.");
+      return;
+    }
+    setIsWatching(true);
+    sendToPeer({ type: "video", videoId: ytVideoId });
   };
 
   return (
@@ -182,8 +246,8 @@ const toggleMute = () => {
       {(callAccepted || localStream) && (
         <div className="call-screen">
           <button className="mute-toggle" onClick={toggleMute}>
-  {isMuted ? "🎙️ Unmute" : "🔇 Mute"}
-</button>
+            {isMuted ? "🎙️ Unmute" : "🔇 Mute"}
+          </button>
 
           {callAccepted && (
             <video
@@ -211,28 +275,66 @@ const toggleMute = () => {
         </div>
       )}
 
-      {/* Floating stickers container */}
+      {/* Floating stickers */}
       <div className="floating-stickers">
-       {stickers.map(({ name, x, y }, i) => (
-  <img
-    key={i}
-    src={`/stickers/${name}.png`}
-    alt={name}
-    className="sticker"
-    style={{
-      position: "fixed",
-      left: x,
-      top: y,
-      userSelect: "none",
-      pointerEvents: "none",
-      transform: "scale(0.3)", 
-      transformOrigin: "top left",
-    }}
-    draggable={false}
-  />
-))}
-
+        {stickers.map(({ name, x, y }, i) => (
+          <img
+            key={i}
+            src={`/stickers/${name}.png`}
+            alt={name}
+            className="sticker"
+            style={{
+              position: "fixed",
+              left: x,
+              top: y,
+              userSelect: "none",
+              pointerEvents: "none",
+              transform: "scale(0.3)",
+              transformOrigin: "top left",
+            }}
+            draggable={false}
+          />
+        ))}
       </div>
+
+      {/* Watch Together YouTube */}
+      {callAccepted && (
+        <div className="youtube-watch">
+          {!isWatching ? (
+            <div className="youtube-input">
+              <input
+                type="text"
+                placeholder="YouTube video ID (e.g. dQw4w9WgXcQ)"
+                value={ytVideoId}
+                onChange={(e) => setYtVideoId(e.target.value)}
+              />
+              <button onClick={handleWatchTogether}>▶️ Watch Together</button>
+            </div>
+          ) : (
+            <YouTube
+              videoId={ytVideoId}
+              onReady={(e) => (ytPlayerRef.current = e.target)}
+              onStateChange={(e) => {
+                sendToPeer({ type: "yt-state", state: e.data });
+              }}
+              onError={(e) => {
+                alert(
+                  "YouTube Playback error. Please check the video ID or try a different video."
+                );
+                setIsWatching(false);
+              }}
+              opts={{
+                width: "360",
+                height: "240",
+                playerVars: {
+                  autoplay: 0,
+                  origin: window.location.origin, // important for embed security
+                },
+              }}
+            />
+          )}
+        </div>
+      )}
     </div>
   );
 }

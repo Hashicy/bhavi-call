@@ -1,194 +1,341 @@
+/* Container & layout */
 .video-call-wrapper {
   position: relative;
   width: 100%;
   height: 100vh;
   overflow: hidden;
+  background: #121212; /* dark base background */
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: #eee;
 }
 
-/* Incoming call popup */
+/* Your ID badge */
+.my-id {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  font-size: 13px;
+  background: rgba(255 255 255 / 0.85);
+  color: #222;
+  padding: 6px 14px;
+  border-radius: 12px;
+  font-weight: 600;
+  user-select: text;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+  z-index: 20;
+}
+
+/* Call Popup Container */
 .call-popup {
-  position: absolute;
-  top: 30%;
+  position: fixed;
+  top: 35%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: white;
-  color: #222;
-  padding: 20px 30px;
+  background-color: var(--popup-bg, #fff);
+  color: var(--popup-color, #222);
+  padding: 24px 32px;
   border-radius: 20px;
   text-align: center;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
-  z-index: 10;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  z-index: 100;
+  width: 320px;
+  user-select: none;
+  display: block;
+  max-width: 90vw; /* Responsive width */
+  box-sizing: border-box; /* Make padding included in width */
 }
 
+/* Text inside popup */
 .call-popup p {
-  margin-bottom: 20px;
-  font-size: 18px;
+  margin: 0 0 1rem;
+  font-size: 1.125rem;
+  font-weight: 600;
 }
 
-.call-buttons button {
-  margin: 0 10px;
-  padding: 10px 20px;
-  font-size: 16px;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.call-buttons .accept {
-  background-color: #92e3a9;
-  color: #073b1d;
-}
-
-.call-buttons .decline {
-  background-color: #ffb3b3;
-  color: #450000;
-}
-
-.call-screen {
-  width: 100%;
-  height: 100%;
-  background: black;
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.remote-video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.local-video {
-  position: absolute;
-  bottom: 20px;
-  right: 20px;
-  width: 160px;
-  height: 120px;
-  border-radius: 16px;
-  border: 3px solid white;
-  box-shadow: 0 0 12px rgba(255, 255, 255, 0.5);
-  object-fit: cover;
-}
-
-/* Themes */
-.video-call-wrapper.cute .call-popup {
-  background-color: #fff0f5;
-  color: #5a003d;
-}
-
-.video-call-wrapper.emo .call-popup {
-  background-color: #1f1f1f;
-  color: #f0f0f0;
-}
-
-.video-call-wrapper.emo .accept {
-  background-color: #555;
-  color: white;
-}
-
-.video-call-wrapper.emo .decline {
-  background-color: #a00;
-  color: white;
-}
-.my-id {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  font-size: 14px;
-  background: rgba(255,255,255,0.8);
-  padding: 6px 10px;
-  border-radius: 8px;
-  z-index: 10;
-}
-
-.end-call {
-  position: absolute;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: #f87171;
-  color: white;
-  border: none;
-  padding: 12px 24px;
-  font-size: 16px;
-  border-radius: 12px;
-  cursor: pointer;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-}
-.call-popup {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 2rem;
-  gap: 1rem;
-}
-
+/* Input style */
 .call-popup input[type="text"] {
-  padding: 10px 16px;
+  padding: 12px 16px;
   border: 2px solid #e0c3fc;
-  border-radius: 12px;
-  font-size: 16px;
+  border-radius: 16px;
+  font-size: 1rem;
   background-color: #f9f6ff;
   color: #4a4a4a;
-  width: 250px;
-  transition: border 0.3s, box-shadow 0.3s;
+  width: 100%;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  box-sizing: border-box;
 }
 
 .call-popup input[type="text"]:focus {
   outline: none;
-  border-color: #c084fc;
-  box-shadow: 0 0 0 4px rgba(192, 132, 252, 0.2);
+  border-color: #a855f7;
+  box-shadow: 0 0 10px rgba(168, 85, 247, 0.4);
 }
 
+/* Buttons container */
+.call-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1rem; /* Add spacing from input */
+  flex-wrap: wrap; /* Support wrap on small widths */
+}
+
+/* Accept / Decline buttons */
+.call-buttons button,
+.call-popup button.accept {
+  flex: 1 1 120px; /* Allow flexible width with min width */
+  padding: 12px 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 24px;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+  transition: background 0.3s ease, transform 0.15s ease;
+  user-select: none;
+  min-width: 120px; /* Prevent buttons getting too small */
+}
+
+/* Accept button */
+.call-buttons .accept,
 .call-popup button.accept {
   background: linear-gradient(135deg, #c084fc, #a855f7);
   color: white;
-  padding: 10px 20px;
-  font-size: 16px;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: background 0.3s, transform 0.2s;
-  box-shadow: 0 4px 8px rgba(168, 85, 247, 0.2);
+  box-shadow: 0 6px 18px rgba(168, 85, 247, 0.35);
 }
 
+.call-buttons .accept:hover,
 .call-popup button.accept:hover {
-  background: linear-gradient(135deg, #a855f7, #9333ea);
-  transform: translateY(-2px);
+  background: linear-gradient(135deg, #9333ea, #7e22ce);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(145, 64, 253, 0.6);
 }
+
+/* Decline button */
+.call-buttons .decline {
+  background: linear-gradient(135deg, #ff6b6b, #d94343);
+  color: white;
+  box-shadow: 0 6px 18px rgba(217, 67, 67, 0.35);
+}
+
+.call-buttons .decline:hover {
+  background: linear-gradient(135deg, #d12e2e, #a22424);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(209, 46, 46, 0.6);
+}
+
+/* Call screen container */
+.call-screen {
+  width: 100%;
+  height: 100%;
+  background: #000;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden; /* Clip anything outside */
+}
+
+/* Remote video fills container */
+.remote-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 0;
+  background: black;
+  filter: drop-shadow(0 0 12px #6a0dad88);
+  user-select: none;
+}
+
+/* Local video small preview */
+.local-video {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 180px;
+  height: 135px;
+  border-radius: 16px;
+  border: 3px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 0 16px rgba(255, 255, 255, 0.75);
+  object-fit: cover;
+  z-index: 20;
+  background: black;
+  user-select: none;
+}
+
+/* Mute toggle button */
+.mute-toggle {
+  position: fixed;
+  bottom: 100px;
+  left: 24px;
+  background-color: #ffebf1;
+  border: none;
+  padding: 0.75rem 1.3rem;
+  border-radius: 9999px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 6px 12px rgba(255, 105, 180, 0.35);
+  user-select: none;
+  transition: background-color 0.3s ease;
+  z-index: 30;
+}
+
+.mute-toggle:hover {
+  background-color: #f8d0e5;
+}
+
+/* End call button */
+.end-call {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #ef4444;
+  color: white;
+  border: none;
+  padding: 14px 28px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  border-radius: 28px;
+  cursor: pointer;
+  box-shadow: 0 8px 18px rgba(239, 68, 68, 0.45);
+  user-select: none;
+  z-index: 30;
+  transition: background-color 0.3s ease, transform 0.15s ease;
+}
+
+.end-call:hover {
+  background-color: #b91c1c;
+  transform: translateX(-50%) scale(1.05);
+}
+
+/* Floating stickers */
 .floating-stickers {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  pointer-events: none; /* So clicks pass through */
+  pointer-events: none;
   overflow: visible;
-  z-index: 10;
+  z-index: 15;
 }
+
 .sticker {
   user-select: none;
   pointer-events: none;
-  filter: drop-shadow(0 2px 3px rgba(0,0,0,0.15));
+  filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.2));
   will-change: transform, left, top;
+  transition: filter 0.3s ease;
 }
-.mute-toggle {
-  position: absolute;
-  bottom: 80px;
-  left: 1rem;
-  background-color: #ffebf1;
+
+/* YouTube watch together container */
+.youtube-watch {
+  position: fixed;
+  top: 50%;
+  right: 1rem;
+  transform: translateY(-50%);
+  background: #ffffffee;
+  border-radius: 16px;
+  padding: 1rem 1.5rem;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.15);
+  z-index: 999;
+  width: 380px;
+  max-width: 90vw;
+  user-select: none;
+}
+
+
+/* YouTube input flex */
+.youtube-input {
+  display: flex;
+  gap: 0.75rem;
+}
+
+/* YouTube input field */
+.youtube-input input {
+  flex-grow: 1;
+  padding: 0.5rem 0.8rem;
+  font-size: 1rem;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  transition: border-color 0.3s ease;
+  box-sizing: border-box;
+}
+
+.youtube-input input:focus {
+  outline: none;
+  border-color: #7c3aed;
+  box-shadow: 0 0 8px rgba(124, 58, 237, 0.4);
+}
+
+/* YouTube watch button */
+.youtube-input button {
+  background: #7c3aed;
   border: none;
-  padding: 0.6rem 1rem;
-  border-radius: 100px;
-  font-size: 0.9rem;
+  color: white;
+  padding: 0.6rem 1.2rem;
+  border-radius: 12px;
   cursor: pointer;
-  z-index: 100;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: background 0.3s ease, transform 0.15s ease;
+  user-select: none;
+}
+
+.youtube-input button:hover {
+  background: #5b21b6;
+  transform: scale(1.05);
+}
+
+/* THEME VARIABLES */
+
+.video-call-wrapper.cute {
+  --popup-bg: #fff0f5;
+  --popup-color: #5a003d;
+  background: linear-gradient(135deg, #ffe6f0, #f0c3d5);
+  color: #5a003d;
+}
+
+.video-call-wrapper.emo {
+  --popup-bg: #1f1f1f;
+  --popup-color: #f0f0f0;
+  background: linear-gradient(135deg, #121212, #2a2a2a);
+  color: #eee;
 }
 
 .video-call-wrapper.emo .mute-toggle {
   background-color: #333;
+  color: #eee;
+  box-shadow: 0 6px 12px rgba(120, 120, 120, 0.3);
+}
+
+.video-call-wrapper.emo .mute-toggle:hover {
+  background-color: #444;
+}
+
+/* Emo accept/decline overrides */
+.video-call-wrapper.emo .call-buttons .accept,
+.video-call-wrapper.emo .call-popup button.accept {
+  background: linear-gradient(135deg, #555, #777);
   color: white;
+  box-shadow: 0 6px 18px rgba(100, 100, 100, 0.35);
+}
+
+.video-call-wrapper.emo .call-buttons .accept:hover,
+.video-call-wrapper.emo .call-popup button.accept:hover {
+  background: linear-gradient(135deg, #333, #555);
+  box-shadow: 0 8px 20px rgba(50, 50, 50, 0.6);
+}
+
+.video-call-wrapper.emo .call-buttons .decline {
+  background: linear-gradient(135deg, #a00, #c00);
+  color: white;
+  box-shadow: 0 6px 18px rgba(170, 0, 0, 0.35);
+}
+
+.video-call-wrapper.emo .call-buttons .decline:hover {
+  background: linear-gradient(135deg, #700, #900);
+  box-shadow: 0 8px 20px rgba(112, 0, 0, 0.6);
 }
