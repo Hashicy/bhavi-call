@@ -1,15 +1,13 @@
-/* Container & layout */
 .video-call-wrapper {
   position: relative;
   width: 100%;
   height: 100vh;
   overflow: hidden;
-  background: #121212; /* dark base background */
+  background: #121212; 
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   color: #eee;
 }
 
-/* Your ID badge */
 .my-id {
   position: fixed;
   top: 12px;
@@ -25,7 +23,6 @@
   z-index: 20;
 }
 
-/* Call Popup Container */
 .call-popup {
   position: fixed;
   top: 35%;
@@ -41,18 +38,18 @@
   width: 320px;
   user-select: none;
   display: block;
-  max-width: 90vw; /* Responsive width */
-  box-sizing: border-box; /* Make padding included in width */
+  max-width: 90vw; 
+  box-sizing: border-box;
 }
 
-/* Text inside popup */
+
 .call-popup p {
   margin: 0 0 1rem;
   font-size: 1.125rem;
   font-weight: 600;
 }
 
-/* Input style */
+
 .call-popup input[type="text"] {
   padding: 12px 16px;
   border: 2px solid #e0c3fc;
@@ -71,19 +68,19 @@
   box-shadow: 0 0 10px rgba(168, 85, 247, 0.4);
 }
 
-/* Buttons container */
+
 .call-buttons {
   display: flex;
   justify-content: center;
   gap: 1rem;
-  margin-top: 1rem; /* Add spacing from input */
-  flex-wrap: wrap; /* Support wrap on small widths */
+  margin-top: 1rem;
+  flex-wrap: wrap; 
 }
 
-/* Accept / Decline buttons */
+
 .call-buttons button,
 .call-popup button.accept {
-  flex: 1 1 120px; /* Allow flexible width with min width */
+  flex: 1 1 120px; 
   padding: 12px 0;
   font-size: 1.1rem;
   font-weight: 700;
@@ -93,10 +90,10 @@
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
   transition: background 0.3s ease, transform 0.15s ease;
   user-select: none;
-  min-width: 120px; /* Prevent buttons getting too small */
+  min-width: 120px; 
 }
 
-/* Accept button */
+
 .call-buttons .accept,
 .call-popup button.accept {
   background: linear-gradient(135deg, #c084fc, #a855f7);
@@ -111,7 +108,6 @@
   box-shadow: 0 8px 20px rgba(145, 64, 253, 0.6);
 }
 
-/* Decline button */
 .call-buttons .decline {
   background: linear-gradient(135deg, #ff6b6b, #d94343);
   color: white;
@@ -124,7 +120,7 @@
   box-shadow: 0 8px 20px rgba(209, 46, 46, 0.6);
 }
 
-/* Call screen container */
+
 .call-screen {
   width: 100%;
   height: 100%;
@@ -133,10 +129,9 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  overflow: hidden; /* Clip anything outside */
+  overflow: hidden;
 }
 
-/* Remote video fills container */
 .remote-video {
   width: 100%;
   height: 100%;
@@ -147,7 +142,6 @@
   user-select: none;
 }
 
-/* Local video small preview */
 .local-video {
   position: fixed;
   bottom: 24px;
@@ -163,7 +157,6 @@
   user-select: none;
 }
 
-/* Mute toggle button */
 .mute-toggle {
   position: fixed;
   bottom: 100px;
@@ -185,7 +178,6 @@
   background-color: #f8d0e5;
 }
 
-/* End call button */
 .end-call {
   position: fixed;
   bottom: 24px;
@@ -210,7 +202,6 @@
   transform: translateX(-50%) scale(1.05);
 }
 
-/* Floating stickers */
 .floating-stickers {
   position: fixed;
   top: 0;
@@ -230,7 +221,6 @@
   transition: filter 0.3s ease;
 }
 
-/* YouTube watch together container */
 .youtube-watch {
   position: fixed;
   top: 50%;
@@ -270,7 +260,6 @@
   box-shadow: 0 0 8px rgba(124, 58, 237, 0.4);
 }
 
-/* YouTube watch button */
 .youtube-input button {
   background: #7c3aed;
   border: none;
