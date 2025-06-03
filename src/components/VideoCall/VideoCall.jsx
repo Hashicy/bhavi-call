@@ -311,27 +311,40 @@ function VideoCall({ theme }) {
               <button onClick={handleWatchTogether}>▶️ Watch Together</button>
             </div>
           ) : (
-            <YouTube
-              videoId={ytVideoId}
-              onReady={(e) => (ytPlayerRef.current = e.target)}
-              onStateChange={(e) => {
-                sendToPeer({ type: "yt-state", state: e.data });
-              }}
-              onError={(e) => {
-                alert(
-                  "YouTube Playback error. Please check the video ID or try a different video."
-                );
-                setIsWatching(false);
-              }}
-              opts={{
-                width: "360",
-                height: "240",
-                playerVars: {
-                  autoplay: 0,
-                  origin: window.location.origin, // important for embed security
-                },
-              }}
-            />
+            <div className="youtube-player-wrapper">
+  <YouTube
+    videoId={ytVideoId}
+    onReady={(e) => (ytPlayerRef.current = e.target)}
+    onStateChange={(e) => {
+      sendToPeer({ type: "yt-state", state: e.data });
+    }}
+    onError={(e) => {
+      alert(
+        "YouTube Playback error. Please check the video ID or try a different video."
+      );
+      setIsWatching(false);
+    }}
+    opts={{
+      width: "360",
+      height: "240",
+      playerVars: {
+        autoplay: 0,
+        origin: window.location.origin,
+      },
+    }}
+  />
+  <button
+    className="quit-watch"
+    onClick={() => {
+      setIsWatching(false);
+      setYtVideoId("");
+      sendToPeer({ type: "yt-state", state: 2 }); // Pause remote video
+    }}
+  >
+    ❌ Quit
+  </button>
+</div>
+
           )}
         </div>
       )}

@@ -328,3 +328,20 @@
   background: linear-gradient(135deg, #700, #900);
   box-shadow: 0 8px 20px rgba(112, 0, 0, 0.6);
 }
+.youtube-player-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.quit-watch {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: #ff5c5c;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  font-size: 0.8rem;
+  border-radius: 5px;
+  cursor: pointer;
+}
