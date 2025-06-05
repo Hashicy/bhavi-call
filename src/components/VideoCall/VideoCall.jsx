@@ -172,23 +172,30 @@ function VideoCall({ theme }) {
   };
 
   // Make outgoing call
-  const makeCall = async () => {
-    if (!remoteId.trim()) return alert("Please enter remote peer ID");
-    try {
-      const stream = await startStream();
-      const call = peerRef.current.call(remoteId, stream);
-      call.on("stream", (remoteStream) => {
-        setRemoteStream(remoteStream);
-        setCallAccepted(true);
-      });
-      const conn = peerRef.current.connect(remoteId);
-      dataConnection.current = conn;
-      currentCall.current = call;
-    } catch (e) {
-      alert("Failed to make a call.");
-      console.error(e);
-    }
-  };
+const makeCall = async () => {
+  if (!remoteId.trim()) {
+    return alert("Please enter remote peer ID");
+  }
+
+  const confirmed = window.confirm(`Do you want to call this peer?\nID: ${remoteId}`);
+  if (!confirmed) return;
+
+  try {
+    const stream = await startStream();
+    const call = peerRef.current.call(remoteId, stream);
+    call.on("stream", (remoteStream) => {
+      setRemoteStream(remoteStream);
+      setCallAccepted(true);
+    });
+    const conn = peerRef.current.connect(remoteId);
+    dataConnection.current = conn;
+    currentCall.current = call;
+  } catch (e) {
+    alert("Failed to make a call.");
+    console.error(e);
+  }
+};
+
 
   // End current call
   const endCall = () => {
