@@ -1,4 +1,36 @@
-# bhavi-call
-This app is formally just to practice my skills, made to honestly just gamify the distance I feel when away from my sister. TvT
+# 💖 Study Buddy App 🌸
 
+> A cute and aesthetic productivity app designed to make your study sessions more fun, focused, and interactive!
+
+---
+
+## ✨ Features
+
+🎥 **Real-time Video Calling**  
+📚 **Pomodoro Timer** (25/5 intervals with breaks)  
+🎶 **YouTube Music Integration**  
+🎀 **Pastel UI with Soft Animations**  
+🌙 **Optional: Night Mode & Stickers**
+
+---
+
+## 🧑‍💻 Tech Stack
+
+| Feature          | Tech                            |
+|------------------|----------------------------------|
+| Frontend         | React                            |
+| Video Calling    | WebRTC + PeerJS / Daily.co       |
+| Pomodoro Timer   | React Hooks + setInterval logic  |
+| Music Player     | YouTube iFrame API               |
+
+
+---
+
+## 📸 Screenshots
+
+> _Coming Soon_ — pastel magic in the making! 🎨✨
+
+---
+
+## 📁 Folder Structure
 
