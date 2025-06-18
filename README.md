@@ -25,12 +25,3 @@
 
 
 ---
-
-## 📸 Screenshots
-
-> _Coming Soon_ — pastel magic in the making! 🎨✨
-
----
-
-## 📁 Folder Structure
-
