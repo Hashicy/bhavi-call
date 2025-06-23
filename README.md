@@ -19,9 +19,7 @@
 | Feature          | Tech                            |
 |------------------|----------------------------------|
 | Frontend         | React                            |
-| Video Calling    | WebRTC + PeerJS / Daily.co       |
+| Video Calling    | WebRTC + PeerJS.                 |
 | Pomodoro Timer   | React Hooks + setInterval logic  |
 | Music Player     | YouTube iFrame API               |
 
-
----
